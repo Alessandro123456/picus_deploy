@@ -118,31 +118,6 @@ catch(e){
  
 })
 
-app.get("/Prenotazione/getLocali",keycloak.protect("docente"),function(req,result){
-
-  console.log("[LOG SERVER] /Locale/getLocali")
-  try{
-      db.getLocali(function(risultati,esito,err){
-              console.log("[LOG SERVER] /Locali/getLocali ESITO",esito)
-              if (esito==true){
-                  result.status(200).send(risultati)
-               }
-              else if(esito == false ){
-                    result.status(202).json({
-                    statusText: 'HANDLE ERROR GENERIC'
-                });
-              }
-  })
-}
-catch(e){
-        console.log("[LOG SERVER] /Locale/getLocali ",e)
-          result.status(202).json({
-          statusText: 'INTERNAL SERVER ERROR'
-        });
-}
-})
-
-
 app.get("/Locale/getLocali",keycloak.protect("operator"),function(req,result){
 
   console.log("[LOG SERVER] /Locale/getLocali")
@@ -297,7 +272,6 @@ catch(e){
 }
 })
 
-////INSERIMENTO PROFESSORI E DATA PER PRENOTAZIONE POSTO 
 app.post("/Prenotazione/ViewPostiDisponibili", keycloak.protect("studente"),function(req,result){
 nome = req.body.prof;
 giorno = req.body.giorno;
@@ -590,7 +564,6 @@ app.post("/Prenotazione/CheckDisponibilita", keycloak.protect("docente"), functi
   }
 })
 
-//aule già prenotate
 app.post("/Prenotazione/getAulePrenotateDocente", keycloak.protect("docente"), function(req, result) {
   console.log("DENTRO VISUALIZZA AULE DISPONIBILI", req.body)
   riga=req.body
@@ -925,10 +898,6 @@ app.post("/Docente/updatefoto", keycloak.protect("docente"), function (req, resu
 
 })
 
-
-
-
-//buildPrenotazione
 app.post("/Prenotazione/InserimentoPrenotazione", keycloak.protect("docente"), function(req, result) {
   console.log("Prenotazione/InserimentoPrenotazione", req.body)
   nome_locale = req.body.id_locale
@@ -1007,6 +976,29 @@ app.get("/Prenotazione/getAuleChiuse", keycloak.protect("docente"), function(req
   }
 })
 
+app.get("/Prenotazione/getLocali",keycloak.protect("docente"),function(req,result){
+
+  console.log("[LOG SERVER] /Locale/getLocali")
+  try{
+      db.getLocali(function(risultati,esito,err){
+              console.log("[LOG SERVER] /Locali/getLocali ESITO",esito)
+              if (esito==true){
+                  result.status(200).send(risultati)
+               }
+              else if(esito == false ){
+                    result.status(202).json({
+                    statusText: 'HANDLE ERROR GENERIC'
+                });
+              }
+  })
+}
+catch(e){
+        console.log("[LOG SERVER] /Locale/getLocali ",e)
+          result.status(202).json({
+          statusText: 'INTERNAL SERVER ERROR'
+        });
+}
+})
 
 
 app.use(function (req, res, next) {
