@@ -1,0 +1,51 @@
+version: '3'
+services:
+  client:
+    image: 'picus_client'
+    stdin_open: true
+    tty: true
+    ports:
+      - "3000:3000"
+    networks:
+      network_1:
+        ipv4_address: 10.10.0.6
+        
+  server:
+    env_file:
+     - ./config.env 
+    image: 'picus_server ${HOSTNAME}'
+    stdin_open: true
+    tty: true
+    ports:
+     - "8000:8000"
+    networks:
+      network_1:
+        ipv4_address: 10.10.0.2
+        
+  keycloak:
+    image: 'alessandro123456/keycloak'
+    stdin_open: true
+    tty: true
+    environment:
+       KEYCLOAK_USER: admin
+       KEYCLOAK_PASSWORD: admin
+    ports:
+      - "8081:8080" 
+        
+  mysql:
+    image: 'picus_mysql'
+    stdin_open: true
+    tty: true
+    environment:
+       MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      network_1:
+        ipv4_address: 10.10.0.3
+        
+networks:
+  network_1:
+    ipam:
+      config:
+        - subnet: 10.10.0.0/24

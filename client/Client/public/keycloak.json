@@ -1,0 +1,8 @@
+{
+  "realm": "picus",
+  "auth-server-url": "http://${process.env.REACT_APP_HOST_IP_KEYCLOAK}:8080/auth/",
+  "ssl-required": "external",
+  "resource": "react_app",
+  "public-client": true,
+  "confidential-port": 0
+}
