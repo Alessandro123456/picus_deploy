@@ -1,5 +1,28 @@
 version: '3'
 services:  
+  client:
+    env_file:
+     - ./.env
+    image: 'picus_client'
+    stdin_open: true
+    tty: true
+    ports:
+     - "${PORT_REACT}:3000"
+    networks:
+      network_1:
+        ipv4_address: 10.10.0.6
+      
+  server:
+    env_file:
+     - ./.env  
+    image: 'picus_server'
+    stdin_open: true
+    tty: true
+    ports:
+     - "${REACT_APP_PORT_SERVER}:8000"
+    networks:
+      network_1:
+        ipv4_address: 10.10.0.2
   keycloak:
     env_file:
      - ./.env  
