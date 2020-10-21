@@ -25,8 +25,7 @@ class CardAule extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-          flag : false
-                      
+          flag : false           
           };
     }
     authorizationHeader() {

@@ -104,8 +104,10 @@ class Docente extends React.Component {
       this.get_locali();
       this.updateNavbarColor_dash_other()
       break
-    case 3:
-      this.setState({scelta: [false, false, false, true, false, false]})
+      case 3:
+        this.setState({scelta: [false, false, false, false, false, false]}, () => {
+          this.setState({scelta: [false, false, false, true, false, false]})
+        })
       this.updateNavbarColor_dash_other()
       break
   }

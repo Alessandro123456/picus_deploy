@@ -43,6 +43,8 @@ class BuildPrenotazioni extends React.Component {
   //CHECK DISPONIBILITA' AULE CON CARD
   PrenotaAule() {
 
+    this.setState({aule_prenotabili:[]})
+
     let struttura = {
       giorno: null,
       ora_ingresso: null,

@@ -111,7 +111,9 @@ class Operator extends React.Component {
         this.getDocenti();
         break
       case 1:
-        this.setState({scelta: [false, true, false, false, false, false]})
+        this.setState({scelta: [false, false, false, false, false, false]} ,() => {
+          this.setState({scelta: [false, true, false, false, false, false]})
+        })
         this.updateNavbarColor_dash_other()
         break
       case 2:
@@ -120,7 +122,9 @@ class Operator extends React.Component {
         this.updateNavbarColor_dash_other()
         break
       case 3:
-        this.setState({scelta: [false, false, false, true, false, false]})
+        this.setState({scelta: [false, false, false, false, false, false]}, () => {
+          this.setState({scelta: [false, false, false, true, false, false]})
+        })
         this.updateNavbarColor_dash_other()
         break
     }
