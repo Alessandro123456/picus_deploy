@@ -27,8 +27,6 @@ class Docente extends React.Component {
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
     window.addEventListener("scroll", this.updateNavbarColor);
-    window.addEventListener("resize", this.handleResize);
-    this.handleResize()
   }
 
   componentWillMount() {
