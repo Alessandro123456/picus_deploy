@@ -3,20 +3,12 @@ var dateFormat = require('dateformat');
 const { get } = require('http');
 const Errors = require('errors');
 var now = new Date();
-let DB_USER = 'root'
-let DB_PORT = '3306'
-let DB_IP = '82.84.12.23'
-let DB_NAME = 'monitoringdieti'
-let DB_PWD = 'password'
 
-/*
 let DB_USER = process.env.DB_USER
 let DB_PORT = process.env.PORT_DB
 let DB_IP = process.env.IP_ADDRESS_DB
 let DB_NAME = 'monitoringdieti'
 let DB_PWD = process.env.DB_PASSWORD
-*/
-
 
 var dbConfig = {
     host: DB_IP,
