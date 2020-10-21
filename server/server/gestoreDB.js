@@ -3,11 +3,19 @@ var dateFormat = require('dateformat');
 const { get } = require('http');
 const Errors = require('errors');
 var now = new Date();
+let DB_USER = 'root'
+let DB_PORT = '3306'
+let DB_IP = '82.84.12.23'
+let DB_NAME = 'monitoringdieti'
+let DB_PWD = 'password'
+
+/*
 let DB_USER = process.env.DB_USER
 let DB_PORT = process.env.PORT_DB
 let DB_IP = process.env.IP_ADDRESS_DB
 let DB_NAME = 'monitoringdieti'
 let DB_PWD = process.env.DB_PASSWORD
+*/
 
 
 var dbConfig = {
@@ -22,8 +30,6 @@ var dbConfig = {
     dateStrings: true
    
 };
-
-console.log("dbconfig", dbConfig)
 
 var conn = mysql.createPool(dbConfig);
 
@@ -55,7 +61,7 @@ module.exports = {
       if (err){ 
                  const dateTime = new Date().getTime();
                  const timestamp = Math.floor(dateTime / 1000);
-                 console.log("[LOG buildLocali "+timestamp+"] Error while inserti to MySQL",err)
+                 console.log("[LOG buildLocali "+timestamp+"] Error while inserti to MySQL",err.Error)
                  return callback(false,err);
       }
       const dateTime = new Date().getTime();
@@ -71,10 +77,8 @@ module.exports = {
     console.log("[LOG buildLocali "+timestamp+"] ECCEZIONE LANCIATA")
     return callback(false,err);
   }
-  finally{
-    console.log("QUI ALCUNI SU INTERNET CHIUDONO LA CONNESSIONE/POOL MA DEVO CHIEDERE AL MASTO")
-  }
     },
+
     getReferenti : function(callback){
         sql = "SELECT email FROM monitoringdieti.UTENTE; "
         try{
@@ -109,9 +113,6 @@ module.exports = {
           console.log("[LOG getReferenti "+timestamp+"] ECCEZIONE LANCIATA")
 
           return callback("NOT_FOUND",false,err);
-        }
-        finally{
-          console.log("QUI ALCUNI SU INTERNET CHIUDONO LA CONNESSIONE/POOL MA DEVO CHIEDERE AL MASTO DEL DATABASE")
         }
           
     },
@@ -199,9 +200,6 @@ module.exports = {
       console.log("[LOG deleteLocali "+timestamp+"] ECCEZIONE LANCIATA")
 
       return callback(false,err);
-    }
-    finally{
-      console.log("QUI ALCUNI SU INTERNET CHIUDONO LA CONNESSIONE/POOL MA DEVO CHIEDERE AL MASTO DEL DATABASE")
     }
     },
     updatelocali : function(req,callback){
@@ -385,7 +383,6 @@ module.exports = {
     
     visualizzaAule : function(nome_prof, giorno, callback){
         sql = "SELECT * FROM (PRENOTAZIONE P JOIN UTENTE U on p.richiedente = u.email) WHERE p.data_richiesta = '"+giorno+"' AND u.NOME = '"+nome_prof+"';"
-        console.log("sql",sql)
         try{
         conn.getConnection(function(err,connection) {
             if (err) {
@@ -504,7 +501,7 @@ module.exports = {
     }
     },
     visualizzaPrenotazioni : function(mail,callback) {
-          sql = "SELECT ps.idPrenotazione_studente, u.NOME, ps.locale, ps.data_richiesta, ps.ora_inizio,u.url_foto from (prenotazione p join prenotazione_studente ps on p.idPRENOTAZIONE=ps.PRENOTAZIONE join utente u on p.richiedente=u.email) where ps.studente='"+mail+"'"
+          sql = "SELECT ps.idPrenotazione_studente, u.NOME, ps.locale, ps.data_richiesta, ps.ora_inizio, ps.ora_fine, u.url_foto from (prenotazione p join prenotazione_studente ps on p.idPRENOTAZIONE=ps.PRENOTAZIONE join utente u on p.richiedente=u.email) where ps.studente='"+mail+"'"
         
           console.log("sql",sql)
           try{
@@ -807,9 +804,6 @@ module.exports = {
       console.log("[LOG getLocali " + timestamp + "] ECCEZIONE LANCIATA")
 
       return callback("NOT_FOUND", false, err);
-    }
-    finally {
-      console.log("QUI ALCUNI SU INTERNET CHIUDONO LA CONNESSIONE/POOL MA DEVO CHIEDERE AL MASTO DEL DATABASE")
     }
   },
 

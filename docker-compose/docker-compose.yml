@@ -1,29 +1,5 @@
 version: '3'
-services:
-  client:
-    env_file:
-     - ./.env
-    image: 'picus_client'
-    stdin_open: true
-    tty: true
-    ports:
-      - "${PORT_REACT}:3000"
-    networks:
-      network_1:
-        ipv4_address: 10.10.0.6
-        
-  server:
-    env_file:
-     - ./.env  
-    image: 'picus_server'
-    stdin_open: true
-    tty: true
-    ports:
-     - "${REACT_APP_PORT_SERVER}:8000"
-    networks:
-      network_1:
-        ipv4_address: 10.10.0.2
-        
+services:  
   keycloak:
     env_file:
      - ./.env  
@@ -35,6 +11,7 @@ services:
        KEYCLOAK_PASSWORD: admin
     ports:
       - "${REACT_APP_PORT_KEYCLOAK}:8080"
+      - "8443:8443"
       
   mysql:
     env_file:
@@ -47,11 +24,11 @@ services:
     ports:
       - "${PORT_DB}:3306"
     networks:
-      network_1:
-        ipv4_address: 10.10.0.3
+      network:
+        ipv4_address: 10.20.0.3
         
 networks:
-  network_1:
+  network:
     ipam:
       config:
-        - subnet: 10.10.0.0/24
+        - subnet: 10.20.0.0/24

@@ -1,4 +1,3 @@
-# Derived from official mysql image (our base image)
 FROM mysql:8.0.21
 
 # Add a database

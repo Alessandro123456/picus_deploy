@@ -21,109 +21,14 @@ module.exports = (ws, req) => {
       console.log("req.params.nome", req.params.nome)
       console.log("req.params.email", req.params.email)
       console.log("req.params.ruolo", req.params.ruolo)
-      ws.send("Benvenuto "+req.params.nome+ " sono Picus, il tuo chatbot personale 🤖. Vedo che sei "+req.params.ruolo+". Hai la possibilità di : \n"+
-      "1) Visualizzare la lista di aule prenotate \n"+
-      "2) Posso mostrarti la lista degli studenti che si sono prenotati \n"+
-      "... \n"+
-      "Puoi inserire o il numero relativo o utilizzare qualche parola chiave, come 'visualizza aule' - 'visualizza studenti' - 'studenti' - 'prenotate' - 'mie aule'..");
-    
+      ws.send("Benvenuto "+req.params.nome+ " sono Picus, il tuo chatbot personale 🤖. Vedo che sei "+req.params.ruolo+" .\n"+
+      "Vuoi che ti aiuti?");
       cont++
       }
       else {
         switch(req.params.ruolo) {
           
-          case "superadmin":
-            console.log("entro in superadmin")
-            console.log("msg", messaggio)
-            
-
-           let msg = messaggio.toLowerCase()
-
-           let presente = false
-           for(let i=0; i<array.length; i++) {
-             if(msg.includes(array[i])) {
-               console.log("dentro parolaccia")
-               presente = true
-             }
-           }
-
-            
-            if(cont == 2 &&  (msg.includes("ciao") || msg.includes("ehi") || msg.includes("we") || msg.includes("salve" ) || msg.includes("ohi") || msg.includes("hello") || msg.includes("hi"))) {
-              ws.send("Ehi! Mi sbaglio o ci siamo già salutati? 🤣")
-            }
-            else if(cont == 2  &&(msg.includes("mmm") || msg.includes("non lo so") || msg.includes("bho") || msg.includes("boh" ) || msg.includes("cosa puoi fare")) ) {
-              ws.send("Se hai dei dubbi posso ricordarti io cosa sono in grado di fare: \n"+ 
-              "1) Posso riportarti la lista delle aule che hai prenotato \n"+
-              "... \n"+
-              "Puoi inserire o il numero relativo o utilizzare qualche parola chiave, come 'visualizza' - 'prenotate' - 'mie aule'..");
-            }
-
-            else if(cont == 2  &&  (msg.includes("si") || msg.includes("ok") || msg.includes("va bene"))) {
-              ws.send("Aspetta, prima fammi qualche richiesta 🤨")
-            }
-
-            else if(cont == 2  && (msg.includes("lista") || msg.includes("1") || msg.includes("visualizzare") || msg.includes("visualizza") || msg.includes("mie aule") || msg.includes("vedere") || msg.includes("prenotate"))){
-               ws.send("Vorresti visualizzare le aule prenotate?")
-               cont = "visualizza"
-
-            }
-           else if(cont == "visualizza" && (msg.includes("si") || msg.includes("yes") || msg.includes("ok") || msg.includes("va bene"))) {
-              ws.send("Ok, vado a controllare la lista di aule che hai prenotato 😄")
-                cont = "preleva e post"
-     
-            try{
-              
-              db.getAulePrenotateDocente(req.params.email,function(risultati,esito,err){
-                      console.log("[LOG SERVER] /Prenotazione/VisualizzaAulePrenotateDocente",esito)
-                      if (esito==true){  
-
-
-                        if(risultati.length !=0) {
-                          ws.send("Voilà! \n")
-                          for(let i=0; i<risultati.length; i++) {
-                            ws.send("Aula: ["+risultati[i].locale +"] \n"+
-                            "Giorno della prenotazione: "+ risultati[i].data_richiesta +" \n"+
-                            "Dalle: "+ risultati[i].ora_inizio +" alle: "+ risultati[i].ora_fine)
-                          }
-                        } 
-                        cont = 2              
-                       }
-                      else if(esito == false ){
-                        cont = "preleva e post"
-                      }
-          })
-        
-          }
-          catch(e){
-            console.log("errore catch", e)
-                cont = "preleva e post"
-                
-          }
-        }
-
-
-             else if (cont == "visualizza" && ! (msg.includes("si") || msg.includes("ok") || msg.includes("va bene"))){
-              ws.send("Mi dispiace, ho annullato la richiesta 😥. Hai scritto, ad esempio, 'si' oppure 'ok' ? Rifammi la richiesta dall'inizio se vuoi 😅")
-              cont = 2
-             }
-            
-            
-      
-            else if (msg =="closed") {
-                console.log("SOCKET CHIUSA ")                
-                ws.terminate()
-
-            }     
-
-            else {
-                if (presente)
-                    ws.send("Ehi "+req.params.nome+"! Non essere così cattivo con me 😞")
-                else
-                    ws.send("Mi dispiace, ma non sono stato programmato per poter gestire questo tipo di richieste 😎")
-
-            }
-
-                         break;
+         
 
 
           case "docente":
@@ -146,17 +51,38 @@ module.exports = (ws, req) => {
              if(cont == 2 &&  (msg_docente.includes("ciao") || msg_docente.includes("ehi") || msg_docente.includes("we") || msg_docente.includes("salve" ) || msg_docente.includes("ohi") || msg_docente.includes("hello") || msg_docente.includes("hi"))) {
                ws.send("Ehi! Mi sbaglio o ci siamo già salutati? 🤣")
              }
-             else if(cont == 2  &&(msg_docente.includes("mmm") || msg_docente.includes("non lo so") || msg_docente.includes("bho") || msg_docente.includes("boh" ) || msg_docente.includes("cosa puoi fare")) ) {
-               ws.send("Se hai dei dubbi posso ricordarti io cosa sono in grado di fare: \n"+ 
+
+             else if(cont == 2  &&(msg_docente.includes("si") || msg_docente.includes("ok") || msg_docente.includes("va bene") || msg_docente.includes("d'accordo" ) || msg_docente.includes("daccordo") || msg_docente.includes("cosa sai fare")) ) {
+               ws.send("In quanto docente, ti elenco le funzionalità che posso fare per te: \n"+ 
                "1) Posso riportarti la lista delle aule che hai prenotato \n"+
                "2) Posso mostrarti la lista degli studenti che si sono prenotati \n"+
                "... \n"+
                "Puoi inserire o il numero relativo o utilizzare qualche parola chiave, come 'visualizza aule' - 'visualizza studenti' - 'studenti' - 'prenotate' - 'mie aule'..");
+               
              }
+             
+           
+             else if(cont == 2 &&(msg_docente.includes("no") || msg_docente.includes("nono") || msg_docente.includes("no grazie") || msg_docente.includes("statt zitt"))) {
+              ws.send("Ok buon lavoro ! \n"+
+              "Io inizio a fumare un sigaro \n"+
+              "Qualora ti servisse aiuto scrivimi Ehi Picus" );
+              cont = "attesa";
+              
+             }
+             else if(cont == 2  &&  (msg_docente.includes("emojichat"))) {
+              ws.send("Ma che bella questa emoji 👏👏")
+            }
+             else if(cont == "attesa" &&(msg_docente.includes("Ehi Picus") || msg_docente.includes("EHI PICUS") || msg_docente.includes("ehi picus") || msg_docente.includes("picus") || msg_docente.includes("ehi Picus"))) {
+              ws.send("Rieccomi Prof " +req.params.nome+ " ti elenco le funzionalità che posso fare per te: \n"+ 
+              "1) Posso riportarti la lista delle aule che hai prenotato \n"+
+              "2) Posso mostrarti la lista degli studenti che si sono prenotati \n"+
+              "... \n"+
+              "Puoi inserire o il numero relativo o utilizzare qualche parola chiave, come 'visualizza aule' - 'visualizza studenti' - 'studenti' - 'prenotate' - 'mie aule'..");
+              cont=2;
+             }
+            
  
-             else if(cont == 2  &&  (msg_docente.includes("si") || msg_docente.includes("ok") || msg_docente.includes("va bene"))) {
-               ws.send("Aspetta, prima fammi qualche richiesta 🤨")
-             }
+             
  
              else if(cont == 2  && (msg_docente.includes("lista") || msg_docente.includes("1") || msg_docente.includes("visualizzare") || msg_docente.includes("visualizza aule") || msg_docente.includes("mie aule") || msg_docente.includes("vedere") || msg_docente.includes("prenotate"))){
               ws.send("Vorresti visualizzare le aule prenotate?")
@@ -343,13 +269,139 @@ module.exports = (ws, req) => {
 
 
           case "studente":
+            console.log("entro in studente")
+
+            console.log("msg", messaggio)
+            
+
+            let msg_studente = messaggio.toLowerCase()
+ 
+            let presente_studente = false
+            for(let i=0; i<array.length; i++) {
+              if(msg_studente.includes(array[i])) {
+                console.log("dentro parolaccia")
+                presente_studente = true
+              }
+            }
+ 
+             
+             if(cont == 2 &&  (msg_studente.includes("ciao") || msg_studente.includes("ehi") || msg_studente.includes("we") || msg_studente.includes("salve" ) || msg_studente.includes("ohi") || msg_studente.includes("hello") || msg_studente.includes("hi"))) {
+               ws.send("Ehi! Mi sbaglio o ci siamo già salutati? 🤣")
+             }
+             else if(cont == 2  &&(msg_studente.includes("si") || msg_studente.includes("ok") || msg_studente.includes("va bene") || msg_studente.includes("d'accordo" ) || msg_studente.includes("daccordo") || msg_studente.includes("cosa sai fare") || msg_studente.includes("start")) ) {
+               ws.send("In quanto studente, ti elenco le funzionalità che posso fare per te: \n"+ 
+               " Posso riportarti la lista delle aule a cui ti sei prenotato \n"+
+               "Ti basta digitare la parola 'posto', oppure 'mio posto ");
+               cont=2;
+              
+             }
+            
+             
+            
+             else if(cont == 2 &&(msg_studente.includes("no") || msg_studente.includes("nono") || msg_studente.includes("no grazie") || msg_studente.includes("statt zitt"))) {
+              ws.send("Ok buon lavoro ! \n"+
+              "Qualora ti servisse aiuto scrivimi Ehi Picus" );
+              cont = "attesa";
+              
+             }
+             else if(cont == "attesa" &&(msg_studente.includes("Ehi Picus") || msg_studente.includes("EHI PICUS") || msg_studente.includes("ehi picus") || msg_studente.includes("picus") || msg_studente.includes("ehi Picus"))) {
+              ws.send("Rieccomi  " +req.params.nome+ " ti elenco le funzionalità che posso fare per te: \n"+ 
+              "1) Posso riportarti la lista delle lezioni per cui hai prenotato un posto \n"+
+              "Ti basta digitare la parola 'posto', oppure 'mio posto' o anche 'visualizza posti' ");
+              cont=2;
+             }
+
+             else if(cont == 2  &&  (msg_studente.includes("emojichat"))) {
+              ws.send("Ma che bella questa emoji 👏👏")
+            }
+            
+ 
+             
+ 
+             else if(cont == 2  && (msg_studente.includes("lista") || msg_studente.includes("posto") || msg_studente.includes("mio posto") || msg_studente.includes("visualizza posti") )){
+              ws.send("Vorresti visualizzare i posti che hai prenotato?")
+              cont = "visualizza"
+
+           }
+
+          
+
+             
+            else if(cont == "visualizza" && (msg_studente.includes("si") || msg_studente.includes("yes") || msg_studente.includes("ok") || msg_studente.includes("va bene"))) {
+               ws.send("Ok, vado a controllare la lista dei posti che hai prenotato 😄")      
+             try{
+               
+               db.visualizzaPrenotazioni(req.params.email,function(risultati,esito,err){
+                       console.log("[LOG SERVER] /Prenotazione/VisualizzaAulePrenotateDocente",esito)
+                       if (esito==true){  
+ 
+                         if(risultati.length !=0) {
+                           ws.send("Voilà! \n")
+                           for(let i=0; i<risultati.length; i++) {
+                             ws.send("Aula: ["+risultati[i].locale +"] \n"+
+                             "Giorno della prenotazione: "+ risultati[i].data_richiesta +" \n"+
+                             "Dalle: "+ risultati[i].ora_inizio +" alle: "+ risultati[i].ora_fine)
+                           }
+                           cont = 2              
+
+                         }
+                         else {
+                           ws.send("Mi dispiace, al momento non hai posti prenotati")
+                           cont = 2              
+                         } 
+                        }
+                       else if(esito == false ){
+                        ws.send("Qualcosa è andato storto nella richiesta 😥. Riprova \n"+
+                        "1) Posso riportarti una lista delle tue prenotazioni  \n");
+                        
+                        cont = 2              
+                      }
+           })
+         
+           }
+           catch(e){
+             console.log("errore catch", e)
+             ws.send("Qualcosa è andato storto nella richiesta 😥. Riprova \n"+
+             "1) Posso riportarti la lista delle aule che hai prenotato \n");
+           
+                 cont = 2              
+                 
+           }
+         }
+ 
+ 
+              else if (cont == "visualizza" && ! (msg_studente.includes("si") || msg_studente.includes("ok") || msg_studente.includes("va bene"))){
+               ws.send("Mi dispiace, ho annullato la richiesta 😥. Hai scritto, ad esempio, 'si' oppure 'ok' ? Rifammi la richiesta dall'inizio se vuoi 😅 \n"+
+               "Digita Start");
+               cont = 2
+              }
+              
+             
+             
+       
+             else if (msg_studente =="closed") {
+                 console.log("SOCKET CHIUSA ")                
+                 ws.terminate()
+ 
+             }     
+ 
+             else {
+                 if (presente_studente)
+                     ws.send("Ehi "+req.params.nome+"! Non essere così cattivo con me 😞")
+                 else
+                     ws.send("Mi dispiace, ma non sono stato programmato per poter gestire questo tipo di richieste 😎")
+ 
+             }
+
+             break;
 
 
           case "operatore":
-
+             ws.send("Non sono state implementate funzionalità per questo ruolo")
           
         }
         
+      
      
 
       }

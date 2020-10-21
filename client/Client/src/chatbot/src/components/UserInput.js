@@ -64,6 +64,7 @@ class UserInput extends Component {
         data: { text }
       });
       this.userInput.innerHTML = '';
+      //invia il comando sulla web socket lato server
       this.props.ws.send(text)
 
     }
@@ -85,8 +86,7 @@ class UserInput extends Component {
         type: 'emoji',
         data: { emoji }
       });
-      this.props.ws.send(emoji)
-
+      this.props.ws.send("emojichat "+emoji)
     }
   }
 
@@ -143,7 +143,7 @@ class UserInput extends Component {
           onKeyDown={this.handleKeyDown.bind(this)}
           onKeyUp={this.handleKeyUp.bind(this)}
           contentEditable="true"
-          placeholder="Write a reply..."
+          placeholder="Scrivi un messaggio..."
           className="sc-user-input--text"
         >
         </div>

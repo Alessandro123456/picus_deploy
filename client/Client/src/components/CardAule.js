@@ -39,9 +39,7 @@ class CardAule extends React.Component {
     }
     
     prenotaAula() {
-      console.log("DESCRZIONE",document.getElementById("id"+this.props.key_p).value)
-      console.log("AULA scelta",this.props.aule)
-      console.log("key",this.props.key_p)
+
       let struttura = {
         giorno: document.getElementById("Date").value,
         ora_ingresso: document.getElementById("timeIN").value,
@@ -51,13 +49,9 @@ class CardAule extends React.Component {
         id_locale : this.props.aule.idLOCALE,
         email : this.props.email
       }
-
-
-      console.log("struttura",struttura)
-      console.log("INVIO", this.props.struttura)
+      
       axios.post('http://'+this.props.IP+':'+this.props.porta_server+'/Prenotazione/InserimentoPrenotazione',struttura,this.authorizationHeader())
       .then(res => {
-        console.log("inserimetno ok", res)
 
         if (res.status == 200 ) {
           this.setState({ flag : true})
@@ -94,25 +88,20 @@ class CardAule extends React.Component {
                                 </CardHeader>
                                       <CardBody>
                                       <Row style={{marginLeft: "0"}}>
-                                      <Col sm="8">                                        
+                                      <Col sm="7">                                        
                                         <Row style={{paddingBottom: "0.1cm"}} className="nav-tabs-neutral justify-content-center" > <h6> <b> TIPOLOGIA</b></h6> </Row>                                     
                                         <Row style={{paddingBottom: "0.1cm"}} className="nav-tabs-neutral justify-content-center"> <h6> <b>CAPIENZA MASSIMA </b> </h6></Row>        
                                         
                                       </Col>
-                                      <Col sm="4">
+                                      <Col sm="5">
                                         <Row style={{paddingBottom: "0.1cm"}}  className="nav-tabs-neutral justify-content-center"><h6>{this.props.aule.tipologia}</h6></Row>                                   
                                         <Row style={{paddingBottom: "0.1cm"}} className="nav-tabs-neutral justify-content-center"><h6> {this.props.aule.capienza_massima}</h6></Row>                                
                                                                           
                                       </Col>
-                                    
                                       </Row>
-                                      
                                         <Row>
-                                      
-      
-                                        <Input id={"id" + this.props.key_p}  style={{textAlign:"center"}} type="textarea" name="text"  placeholder="DESCRIZIONE LEZIONE"/>
-                                                                                                                                                 
-                                         
+                                        <Input id={"id" + this.props.key_p}  style={{textAlign:"center"}} type="textarea" name="text"  placeholder="DESCRIZIONE LEZIONE"/>                                                                                                                                                 
+   
                                           </Row>   
                                       <CardFooter>
                                         {!this.state.flag ? 
@@ -124,13 +113,7 @@ class CardAule extends React.Component {
                                         <Button  className="btn-round" color="danger" type="button" >                                        
                                         Aula prenotata
                                        </Button>
-
                                         }
-                                        
-
-                                        
-                                      
-    
                                       </CardFooter>                                      
                                       </CardBody>
                                       </Card>

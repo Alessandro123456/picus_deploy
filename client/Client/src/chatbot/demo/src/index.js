@@ -35,21 +35,13 @@ class Chatbot extends Component {
   }
 
   createsocket() {
-
-
+    //gli input all'interno della socket stanno nel file UserInput.js
 		if (!this.state.alreadycreate && this.props.flag ) {
-
-        this.props.ws.onopen = () => {
-
-          console.log("KEY", this.props.keycloak.resourceAccess.react_app.roles[0])
-          
+        this.props.ws.onopen = () => {          
           this.props.ws.send(this.props.keycloak.profile.firstName+" "+ this.props.email+" "+this.props.keycloak.resourceAccess.react_app.roles[0])
           this.setState({isOpen: !this.state.isOpen})
-
         }
-
 				this.props.ws.onmessage = msg => {
-          console.log("RICEVO")
           var struttura = {
               author: 'them',
               type: 'text',
@@ -60,12 +52,7 @@ class Chatbot extends Component {
               messageList: [...this.state.messageList, struttura]
             });
            }
-          
-        
-      
-
       this.setState({ alreadycreate: true });
-
 				}
 		
 }

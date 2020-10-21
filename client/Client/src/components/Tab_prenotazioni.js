@@ -1,6 +1,6 @@
 import React from "react";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Button, Input } from 'reactstrap';
+import { Button, Input , Row, Col} from 'reactstrap';
 import TextField from '@material-ui/core/TextField';
 import MUIDataTable from "mui-datatables";
 import MenuItem from '@material-ui/core/MenuItem';
@@ -42,7 +42,6 @@ class Tab_prenotazioni extends React.Component {
 
     axios.post('http://' + this.props.IP + ':'+this.props.porta_server+'/Prenotazioni/getPrenotazioni', { email: this.props.email }, this.authorizationHeader())
       .then(res => {
-        console.log("[TAB_PRENOTAZIONI] Ecco i risultati: ", res.data)
         //var dati = this.conversionedati(res.data)
 
         if (res.status == 200 && res.data.length != 0) {
@@ -71,7 +70,6 @@ class Tab_prenotazioni extends React.Component {
 
   componentDidUpdate() {
     if (this.state.already_get == false) {
-      console.log("dentro")
       this.get_locali()
       this.setState({ already_get: true })
     }
@@ -90,7 +88,6 @@ class Tab_prenotazioni extends React.Component {
 
     axios.get('http://' + this.props.IP + ':'+this.props.porta_server+'/Prenotazione/getLocali', this.authorizationHeader())
       .then(res => {
-        console.log("Ecco i risultati: ", res.data)
         var dati = this.convertilocali(res.data);
         if (res.status == 200 && res.data.length != 0) {
           this.setState({ locali: dati })
@@ -132,8 +129,6 @@ class Tab_prenotazioni extends React.Component {
 
   handleChange(tabella) {
 
-    console.log("[TAB PRENOTAZIONI] Tabella", tabella)
-
     let struttura = {
       id_prenotazione: tabella.rowData[0],
       data_prenotazione: tabella.rowData[1],
@@ -154,10 +149,8 @@ class Tab_prenotazioni extends React.Component {
   }
   //OPERAZIONI CRUD
   aggiorna_prenotazione(row) {
-    console.log("[TAB PRENOTAZIONI AGGIORAN ROW", row)
     axios.post('http://' + this.props.IP + ':8000/Prenotazioni/aggiornaprenotazione', row, this.authorizationHeader())
       .then(response => {
-        console.log(response.status, response.data.statusText)
         if (response.status == 202 && response.data.statusText == "HANDLE ERROR GENERIC" || response.data.statusText == "INTERNAL SERVER ERROR") {
           Swal.fire({
             icon: 'error',
@@ -247,12 +240,10 @@ class Tab_prenotazioni extends React.Component {
   handleDeleteCat = (rowsDeleted) => {
 
     var vect = [];
-    console.log("ROWS DELECTED", rowsDeleted)
 
     for (let i = 0; i < rowsDeleted.data.length; i++) {
       vect.push(this.state.prenotazioni[rowsDeleted.data[i].dataIndex].idPRENOTAZIONE)
     }
-    console.log("vect", vect)
     Swal.fire({
       title: 'Sei sicuro?',
       text: "Tutte le prenotazioni effettuate dagli studenti saranno cancellate!",
@@ -260,7 +251,7 @@ class Tab_prenotazioni extends React.Component {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Si, cancella!'
     }).then((result) => {
       if (result.isConfirmed) {
         this.eliminaprenotazione(vect)
@@ -479,9 +470,24 @@ class Tab_prenotazioni extends React.Component {
 
     return (
       <div>
-        <MUIDataTable title={"Gestione delle Prenotazioni"} data={this.state.prenotazioni} columns={columns} options={options} />
-      </div>
-
+      <div id="gestisci_prenotazione" className="page-header clear-filter" filter-color="blue" style={{ background: "linear-gradient(0deg, rgb(164 147 147 / 20%), rgb(98 115 128 / 9%))",  color: "black", minHeight: "none", maxHeight: "none", height: "auto" }}>
+        <div
+          className="page-header-image"
+          style={{
+          }}
+          ref={React.createRef()}
+        ></div>
+        <div>
+          <Row>
+            <Col sm="1"></Col>
+            <Col sm="10" style={{ marginTop: "2.7cm" }}>
+                      <MUIDataTable title={"Gestione delle Prenotazioni"} data={this.state.prenotazioni} columns={columns} options={options} />
+                      </Col>
+                  <Col sm="1"></Col>
+                </Row>
+              </div>
+              </div>
+              </div>
     );
 
   }

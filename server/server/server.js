@@ -3,6 +3,7 @@ var app = express();
 var cors = require('cors')
 var bodyParser = require("body-parser");
 var db = require("./gestoreDB.js")
+
 var IP_KEYCLOAK = process.env.REACT_APP_HOST_IP_KEYCLOAK
 var port_keycloak = process.env.REACT_APP_PORT_KEYCLOAK
 
@@ -28,7 +29,7 @@ app.use( keycloak.middleware( ));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json())
 app.use(cors())
-app.ws('/chatbot/:nome/:email/:ruolo',WsController);
+
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -36,8 +37,12 @@ app.use(function (req, res, next) {
   next();
   });
 
-///////////////////////////////////-------------------OPERATORE---------------------------///////////////////////////////////////////
+///////////////////////////////////------------------- CHATBOT --------------------////////////////
 
+app.ws('/chatbot/:nome/:email/:ruolo',WsController);
+
+///////////////////////////////////-------------------OPERATORE ---------------------------///////////////////////////////////////////
+ 
 app.post("/Locali/InserimentoLocale",keycloak.protect("operator"),function (req, result) {
       console.log("[LOG SERVER] Locali/InserimentoLocali")
       console.log(req.body)
@@ -90,7 +95,7 @@ app.post("/Locali/InserimentoLocale",keycloak.protect("operator"),function (req,
     
 })
 
-app.get("/Locali/view_referenti",keycloak.protect("operator"),function(req,result){
+app.get("/Locali/getDocenti",keycloak.protect("operator"),function(req,result){
   console.log("[LOG SERVER] /Locali/view_referent")
   try{
       db.getReferenti(function(risultati,esito,err){
@@ -248,7 +253,7 @@ app.post("/Utenti/aggiornaUtenti", keycloak.protect("operator"), function (req, 
 })
 
 ///////////////////////////////////-------------------STUDENTE---------------------------///////////////////////////////////////////
-//INSERIMENTO PRENOTAZIONE  
+
 app.get("/Prenotazione/getProfessori",keycloak.protect("studente"),function(req,result){
   console.log("[LOG SERVER] /Prenotazione/getProfessori") 
   try{
@@ -284,7 +289,6 @@ try{
     gg = data.getDate() ;
     mm = data.getMonth() + 1 ;
     aaaa = data.getFullYear();  
-    console.log("calcolo giorno ",gg)
     if (parseInt(giorno.substring(0, 4)) < aaaa) {
       console.log("[SERVER GET VIEW POSTI DISPONIBILI ]ANNO SBAGLIATO")
       result.status(202).json({
@@ -452,8 +456,37 @@ catch(e){
 }
 })
 
-
 ///////////////////////////////////-------------------DOCENTE---------------------------///////////////////////////////////////////
+
+app.post("/Docente/updatefoto", keycloak.protect("docente"), function (req, result) {
+  console.log("[LOG SERVER] Docente/updatefoto")
+  try {
+    db.updatefoto(req.body, function (esito, err) {
+      console.log("[LOG SERVER] Docente/updatefoto ESITO", esito)
+      if (esito == true) {
+        result.status(200).json({
+          statusText: 'OK'
+        });
+
+      }
+      else if (esito == false ) {
+        result.status(202).json({
+          statusText: 'HANDLE ERROR GENERIC'
+        });
+     
+      }
+    })
+  }
+  catch (e) {
+    console.log("[LOG SERVER]  Docente/updatefoto ", e)
+    result.status(202).json({
+      statusText: 'INTERNAL SERVER ERROR'
+    });
+  }
+
+
+})
+
 app.post("/Prenotazione/CheckDisponibilita", keycloak.protect("docente"), function(req, result) {
   console.log("DENTRO VISUALIZZA AULE DISPONIBILI", req.body)
   riga=req.body
@@ -867,37 +900,6 @@ app.post("/Prenotazioni/eliminaprenotazione", keycloak.protect("docente"), funct
 
 })
 
-app.post("/Docente/updatefoto", keycloak.protect("docente"), function (req, result) {
-  console.log("[LOG SERVER] Docente/updatefoto")
-  
- 
-  try {
-    db.updatefoto(req.body, function (esito, err) {
-      console.log("[LOG SERVER] Docente/updatefoto ESITO", esito)
-      if (esito == true) {
-        result.status(200).json({
-          statusText: 'OK'
-        });
-
-      }
-      else if (esito == false ) {
-        result.status(202).json({
-          statusText: 'HANDLE ERROR GENERIC'
-        });
-     
-      }
-    })
-  }
-  catch (e) {
-    console.log("[LOG SERVER]  Docente/updatefoto ", e)
-    result.status(202).json({
-      statusText: 'INTERNAL SERVER ERROR'
-    });
-  }
-
-
-})
-
 app.post("/Prenotazione/InserimentoPrenotazione", keycloak.protect("docente"), function(req, result) {
   console.log("Prenotazione/InserimentoPrenotazione", req.body)
   nome_locale = req.body.id_locale
@@ -1000,14 +1002,12 @@ catch(e){
 }
 })
 
-
 app.use(function (req, res, next) {
   res.setHeader('Content-Type', 'text/plain');
   res.status(404).json({
     statusText: 'La pagina non esiste amico'
 });
 });
-
 
 app.listen(8000, "0.0.0.0");
 console.log("YOU ARE UP on 8000 port");

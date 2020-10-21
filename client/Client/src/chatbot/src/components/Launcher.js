@@ -31,7 +31,6 @@ class Launcher extends Component {
 
   if (promise !== undefined) {
     promise.catch(error => {
-      console.log(error)
     }).then(() => {
         });
    }
