@@ -3,30 +3,30 @@ services:
   client:
     env_file:
      - ./.env
-    image: 'picus_client'
+    image: 'client'
     stdin_open: true
     tty: true
     ports:
      - "${PORT_REACT}:3000"
     networks:
-      network_1:
-        ipv4_address: 10.10.0.6
+      network:
+        ipv4_address: 10.20.0.6
       
   server:
     env_file:
      - ./.env  
-    image: 'picus_server'
+    image: 'alessandro123456/picus_server'
     stdin_open: true
     tty: true
     ports:
      - "${REACT_APP_PORT_SERVER}:8000"
     networks:
-      network_1:
-        ipv4_address: 10.10.0.2
+      network:
+        ipv4_address: 10.20.0.2
   keycloak:
     env_file:
      - ./.env  
-    image: 'alessandro123456/keycloak'
+    image: 'picus_keycloak_ultimo'
     stdin_open: true
     tty: true
     environment:
@@ -39,7 +39,7 @@ services:
   mysql:
     env_file:
      - ./.env
-    image: 'picus_mysql'
+    image: 'alessandro123456/picus_database'
     stdin_open: true
     tty: true
     environment:
