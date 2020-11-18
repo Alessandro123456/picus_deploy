@@ -3,7 +3,7 @@ services:
   client:
     env_file:
      - ./.env
-    image: 'client'
+    image: 'alessandro123456/picus_client'
     stdin_open: true
     tty: true
     ports:
@@ -26,7 +26,7 @@ services:
   keycloak:
     env_file:
      - ./.env  
-    image: 'picus_keycloak_ultimo'
+    image: 'alessandro123456/picus_keycloak'
     stdin_open: true
     tty: true
     environment:
