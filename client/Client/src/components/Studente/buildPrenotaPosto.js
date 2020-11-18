@@ -204,14 +204,15 @@ class BuildPrenotaPosto extends React.Component {
   <div>
 
     {this.state.lista_aule.length != 0 && this.state.mostra_card &&
-      <Row style={{ marginTop: "2.7cm", marginLeft: "2.6cm" }}>
+      <Row style={{ marginTop: "2.7cm", marginLeft: "15px", marginRight: "15px" }}>
 
         {this.state.lista_aule.map((aule, key) =>
           <div>
+    <Col sm="3">
+        
+        </Col>
 
-
-            <Col sm="4">
-              <Container style={{ color: "black", maxWidth: "8cm", minWidth: "8cm", minHeight: "8cm", maxHeight: "8cm" }}>
+<Col sm="4" style={{maxWidth: "100%",marginBottom: "1.5cm"}}>
                 <Card>
                   <CardHeader className="nav-tabs-neutral justify-content-center">
                     <Nav className="nav-tabs-neutral justify-content-center" data-background-color="blue" role="tablist" tabs >
@@ -230,7 +231,7 @@ class BuildPrenotaPosto extends React.Component {
                         <Row style={{ paddingBottom: "0.1cm" }} className="nav-tabs-neutral justify-content-center"><h6> {aule.ora_inizio}</h6></Row>
                         <Row style={{ paddingBottom: "0.1cm" }} className="nav-tabs-neutral justify-content-center"><h6> {aule.ora_fine}</h6></Row>
                       </Col>
-                      <Col sm="4">
+                      <Col sm="3">
                         {aule.url_foto != null ?
                           <img alt="..." className="rounded-circle" src={aule.url_foto}></img>
                           :
@@ -243,8 +244,11 @@ class BuildPrenotaPosto extends React.Component {
                     <TabContent style={{ paddingTop: "0.3cm" }} body outline color="primary" className="text-center" className="nav-tabs-neutral justify-content-center" >
                       <h6> Posti Disponibili : {aule.numero_persone}</h6>
                     </TabContent>
-
-                    <CardFooter>
+                    <Col sm="3">
+        
+        </Col>
+        <Col sm="6">
+        <CardFooter>
                       {!this.state.aule_prenotate.includes(aule.idPRENOTAZIONE) ?
                         <Button className="btn-round" color="success" type="button" onClick={() => { this.PrenotaPosto(key) }}>
                           Prenota un posto
@@ -255,11 +259,17 @@ class BuildPrenotaPosto extends React.Component {
                                       </Button>
                       }
                     </CardFooter>
+        </Col>
+        <Col sm="3">
+        
+        </Col>
+                    
                   </CardBody>
                 </Card>
-              </Container>
             </Col>
-
+            <Col sm="3">
+        
+        </Col>
           </div>
         )}
       </Row>
